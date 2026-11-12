@@ -614,6 +614,38 @@
     .gp-pic-input:focus { border-color: #EA580C; }
     .gp-pic-input:disabled { background: #F4F4F2; color: #aaa; }
     .gp-pic-input.need { border-color: #DC3545; background: rgba(220,53,69,0.05); }
+    /* ===== INV OUT DISTRIBUSI — mode tabel + checklist ===== */
+    .so-rule { background: #fff; border: 1px solid #E4E6E4; border-radius: 12px; padding: 10px 12px; font-size: 11.5px; color: #555; line-height: 1.55; margin-bottom: 12px; }
+    .so-rule b { color: #111; }
+    .so-filters { background: #fff; border: 1px solid #E4E6E4; border-radius: 14px; padding: 12px; margin-bottom: 12px; }
+    .so-ftitle { font-size: 12px; font-weight: 700; color: #444; display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .so-ftitle a { margin-left: auto; color: #65A30D; font-size: 11.5px; cursor: pointer; }
+    .so-fgroup { margin-bottom: 10px; }
+    .so-auto { font-size: 9px; color: #aaa; font-weight: 400; letter-spacing: 0; text-transform: none; }
+    .so-bulk { background: #fff; border: 1px solid #E4E6E4; border-radius: 12px; padding: 11px 12px; margin-bottom: 12px; }
+    .so-bulk-line { display: flex; gap: 8px; }
+    .so-bulk-line .field-input { flex: 1; min-width: 0; }
+    .so-bulk-line button { flex: 0 0 auto; border: none; background: #65A30D; color: #fff; font-weight: 700; font-size: 12px; padding: 0 14px; border-radius: 10px; font-family: inherit; cursor: pointer; }
+    .so-tools { display: flex; gap: 8px; margin: 10px 0; }
+    .so-tog { font-size: 11.5px; font-weight: 700; padding: 10px 12px; border-radius: 11px; border: 1.5px solid #D8DAD8; background: #fff; color: #666; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+    .so-tog.on { background: #65A30D; border-color: #65A30D; color: #fff; }
+    .so-tbl { border-collapse: separate; border-spacing: 0; min-width: 880px; }
+    .so-tbl th.sticky, .so-tbl td.sticky { position: sticky; left: 0; z-index: 2; background: #fff; box-shadow: 2px 0 0 #E6E8E6; }
+    .so-tbl th.sticky { background: #F7F8F7; z-index: 3; }
+    .so-tbl td.sticky { font-weight: 700; }
+    .so-tbl td.mat { max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+    .so-tbl td.wipc { font-weight: 700; color: #0A5C42; }
+    .so-tbl tr.on td, .so-tbl tr.on td.sticky { background: #F3FAE8; }
+    .so-tbl td.so-empty { text-align: center; color: #aaa; padding: 24px; background: #fff; }
+    .so-q { width: 76px; padding: 8px; border: 1.5px solid #D8DAD8; border-radius: 9px; font-size: 13px; font-family: inherit; text-align: right; outline: none; background: #fff; color: #111; }
+    .so-q:focus { border-color: #65A30D; }
+    .so-q:disabled { background: #E8F3D3; color: #3F6212; font-weight: 700; border-color: #CFE5A8; }
+    .so-q.err { border-color: #DC3545; background: #FDECEE; }
+    .so-chk { width: 24px; height: 24px; accent-color: #65A30D; vertical-align: middle; }
+    .so-t { width: 130px; padding: 8px; border: 1.5px solid #D8DAD8; border-radius: 9px; font-size: 12.5px; font-family: inherit; outline: none; background: #fff; color: #111; }
+    .so-t:focus { border-color: #65A30D; }
+    .so-t.need { border-color: #DC3545; background: #FDECEE; }
+    .so-submitbar { position: sticky; bottom: 0; z-index: 30; padding: 12px 0 8px; background: linear-gradient(to top, #F0F2F1 70%, rgba(240,242,241,0)); }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -13982,7 +14014,7 @@
   // Unit & Con's otomatis dari rekap; Qty diisi manual; PIC Terima/Line manual + suggest dari sheet
   // "PIC TERIMA" (per menu). Cetak ke sheet "INV OUT ..." dan menambah Qty Out Unit di REKAP OUTSTANDING.
   var SPA_OUT_CFG = {
-    dist: { page: 'page-spa-out-dist', title: 'INV OUT DISTRIBUSI',  divisi: 'DISTRIBUSI',  picLabel: 'PIC Terima', icon: 'ti-truck-delivery', hasRemark: true },
+    dist: { page: 'page-spa-out-dist', title: 'INV OUT DISTRIBUSI',  divisi: 'DISTRIBUSI',  picLabel: 'PIC Terima', icon: 'ti-truck-delivery', hasRemark: true, tableMode: true },
     line: { page: 'page-spa-out-line', title: 'INV OUT LINE',        divisi: 'LINE',        picLabel: 'Line',       icon: 'ti-building-factory-2' },
     acc:  { page: 'page-spa-out-acc',  title: 'INV OUT ACCESSORIES', divisi: 'ACCESSORIES', picLabel: 'PIC Terima', icon: 'ti-tag' }
   };
@@ -14028,10 +14060,12 @@
         + '<div class="load-time-note" id="soLoadTime-' + k + '"></div>'
         + '<div class="load-error-row" id="so' + k + 'ErrorRow" style="display:none"><span id="so' + k + 'ErrorMsg"></span>'
         + '<button type="button" class="retry-btn" onclick="loadSoMaster(\'' + k + '\')"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button></div>'
-        + '<div id="soGroups-' + k + '"></div>'
-        + '<button class="btn-add-group" onclick="addSoGroup(\'' + k + '\')"><i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO</button>'
-        + '<div class="divider"></div>'
-        + '<button class="btn-submit" onclick="submitSoForm(\'' + k + '\')"><i class="ti ti-send" style="font-size:18px"></i> Kirim</button>'
+        + (c.tableMode ? _soTableMarkup(k) : (
+          '<div id="soGroups-' + k + '"></div>'
+          + '<button class="btn-add-group" onclick="addSoGroup(\'' + k + '\')"><i class="ti ti-folder-plus" style="font-size:16px"></i> Tambah SPO</button>'
+          + '<div class="divider"></div>'
+          + '<button class="btn-submit" onclick="submitSoForm(\'' + k + '\')"><i class="ti ti-send" style="font-size:18px"></i> Kirim</button>'
+        ))
         + '<div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>'
         + '<div class="today-tabs" id="soTodayTabs-' + k + '">'
         + '<button type="button" class="today-tab-btn active" onclick="soTab(\'' + k + '\',0,this)">Hari Ini</button>'
@@ -14239,7 +14273,248 @@
     el.innerHTML = html;
   }
 
+  // ===== INV OUT DISTRIBUSI — mode TABEL + checklist "All Out?" =====
+  // Baris tabel = SPO + Material dengan WIP Unit > 0 untuk divisi DISTRIBUSI (dari REKAP OUTSTANDING).
+  // All Out? dicentang -> Qty Out = WIP Unit; atau isi Qty Out manual (maksimal sebesar WIP Unit).
+  // Yang terkirim/tercetak HANYA baris yang dicentang atau diisi Qty Out-nya. Filter SPO / Style (otomatis)
+  // / Material tidak menghapus isian baris yang sedang tidak tampil. Menu LINE & ACCESSORIES tetap form lama.
+  var soTbl = { dist: { rows: [], S: {}, F: { spo: '', material: '' }, onlySel: false } };
+
+  function _soTableMarkup(k) {
+    var q = '\'' + k + '\'';
+    return '<div class="so-rule"><b>Cara isi:</b> centang <b>All Out?</b> untuk mengirim <b>seluruh WIP Unit</b>, atau isi <b>Qty Out</b> kalau hanya sebagian (maksimal sebesar WIP Unit). '
+      + 'Yang tercetak ke sheet <b>hanya baris yang dicentang atau diisi Qty Out-nya</b>.</div>'
+      + '<div class="so-filters">'
+      + '<div class="so-ftitle"><i class="ti ti-filter"></i> Filter tabel <a onclick="soTblResetFilters(' + q + ')">Reset</a></div>'
+      + '<div class="so-fgroup"><label class="field-label">SPO</label>'
+      + '<div class="spo-ac-wrap so-ac-wrap"><input type="text" class="field-input" id="soTfSpo-' + k + '" placeholder="Ketik / pilih SPO..." autocomplete="off"><div class="spo-ac-drop" id="soTdSpo-' + k + '"></div></div></div>'
+      + '<div class="so-fgroup"><label class="field-label">Style <span class="so-auto">(terisi otomatis dari SPO)</span></label>'
+      + '<div class="style-display" id="soTfStyle-' + k + '">Pilih atau ketik SPO</div></div>'
+      + '<div class="so-fgroup" style="margin-bottom:0"><label class="field-label">Material</label>'
+      + '<div class="spo-ac-wrap so-ac-wrap"><input type="text" class="field-input" id="soTfMat-' + k + '" placeholder="Ketik / pilih Material..." autocomplete="off"><div class="spo-ac-drop" id="soTdMat-' + k + '"></div></div></div>'
+      + '</div>'
+      + '<div class="so-bulk"><label class="field-label">PIC Terima — isi sekaligus ke semua baris terpilih</label>'
+      + '<div class="so-bulk-line"><input type="text" class="field-input" id="soTbulk-' + k + '" list="soPicList-' + k + '" placeholder="Ketik / pilih PIC Terima..." autocomplete="off">'
+      + '<button type="button" onclick="soTblApplyBulk(' + q + ')">Terapkan</button></div></div>'
+      + '<div id="soTstats-' + k + '"></div>'
+      + '<div class="so-tools"><button type="button" class="so-tog" id="soTonly-' + k + '" onclick="soTblToggleOnly(' + q + ')"><i class="ti ti-filter"></i> Terpilih saja</button>'
+      + '<button type="button" class="so-tog" onclick="soTblClear(' + q + ')"><i class="ti ti-eraser"></i> Kosongkan</button></div>'
+      + '<div class="today-tablewrap"><table class="today-table so-tbl"><thead><tr>'
+      + '<th class="sticky">SPO</th><th>Style</th><th>Material</th><th>Unit</th><th>WIP Unit</th><th>Qty Out</th><th>All Out?</th><th>Remark</th><th>PIC Terima</th>'
+      + '</tr></thead><tbody id="soTbody-' + k + '"><tr><td colspan="9" class="so-empty">Memuat data...</td></tr></tbody></table></div>'
+      + '<div class="today-scroll-hint">← geser tabel ke kanan untuk melihat semua kolom → (kolom SPO tetap menempel di kiri)</div>'
+      + '<datalist id="soPicList-' + k + '"></datalist>'
+      + '<div class="so-submitbar"><button type="button" class="btn-submit" id="soTbtn-' + k + '" onclick="submitSoForm(' + q + ')"><i class="ti ti-send" style="font-size:18px"></i> Kirim</button></div>';
+  }
+
+  function soTblKey(it) { return (it.spo + '|' + it.material).toLowerCase(); }
+  function soTblSt(k, i) {
+    var T = soTbl[k], key = soTblKey(T.rows[i]);
+    return T.S[key] || (T.S[key] = { qty: '', all: false, remark: '', pic: '' });
+  }
+  function soTblActive(k, i) { var s = soTblSt(k, i); return s.all || (s.qty !== '' && parseFloat(s.qty) > 0); }
+  function soTblOut(k, i) { var s = soTblSt(k, i); return s.all ? soTbl[k].rows[i].wip : (parseFloat(s.qty) || 0); }
+
+  // Susun ulang baris dari data master terbaru; isian baris yang masih ada dipertahankan.
+  function soTblBuild(k) {
+    var T = soTbl[k];
+    var rows = soState[k].items.filter(function(it) { return it.wip > 0; }).slice();
+    rows.sort(function(a, b) {
+      return a.spo.localeCompare(b.spo, undefined, { numeric: true, sensitivity: 'base' })
+        || a.material.localeCompare(b.material, undefined, { numeric: true, sensitivity: 'base' });
+    });
+    T.rows = rows;
+    var live = {};
+    rows.forEach(function(it) { live[soTblKey(it)] = true; });
+    Object.keys(T.S).forEach(function(key) { if (!live[key]) delete T.S[key]; });
+    document.getElementById('soPicList-' + k).innerHTML = soState[k].pics.map(function(p) { return '<option value="' + _escWip(p) + '">'; }).join('');
+    ['spo', 'material'].forEach(function(kind) {
+      if (T.F[kind] && !soTblOptions(k, kind, true).some(function(o) { return o.v === T.F[kind]; })) {
+        T.F[kind] = '';
+        document.getElementById(kind === 'spo' ? 'soTfSpo-' + k : 'soTfMat-' + k).value = '';
+      }
+    });
+    soTblSyncStyle(k);
+  }
+
+  function resetSoTable(k) {
+    var T = soTbl[k];
+    T.S = {}; T.F = { spo: '', material: '' }; T.onlySel = false;
+    document.getElementById('soTfSpo-' + k).value = '';
+    document.getElementById('soTfMat-' + k).value = '';
+    document.getElementById('soTbulk-' + k).value = '';
+    document.getElementById('soTonly-' + k).classList.remove('on');
+    setupSoTblAC(k, 'spo');
+    setupSoTblAC(k, 'material');
+    soTblBuild(k);
+    soTblRender(k);
+  }
+
+  // Pilihan dropdown: SPO dan Material saling menyesuaikan (ignoreOther = true dipakai untuk mencocokkan ketikan)
+  function soTblOptions(k, kind, ignoreOther) {
+    var T = soTbl[k], other = kind === 'spo' ? 'material' : 'spo', seen = {}, out = [];
+    T.rows.forEach(function(r) {
+      if (!ignoreOther && T.F[other] && r[other] !== T.F[other]) return;
+      var v = r[kind];
+      if (seen[v]) return;
+      seen[v] = true;
+      out.push({ v: v, sub: kind === 'spo' ? r.style : r.unit + ' · WIP ' + r.wip });
+    });
+    return _acSort(out, 'v');
+  }
+
+  function setupSoTblAC(k, kind) {
+    var input = document.getElementById(kind === 'spo' ? 'soTfSpo-' + k : 'soTfMat-' + k);
+    var drop  = document.getElementById(kind === 'spo' ? 'soTdSpo-' + k : 'soTdMat-' + k);
+    if (input._soTblWired) return;
+    input._soTblWired = true;
+    function renderDrop() {
+      var q = input.value.toLowerCase().trim();
+      var list = soTblOptions(k, kind).filter(function(o) { return !q || o.v.toLowerCase().indexOf(q) >= 0; });
+      drop.innerHTML = list.length
+        ? list.map(function(o) { return '<div class="spo-ac-item" data-v="' + _escWip(o.v) + '"><span class="spo-ac-spo">' + _soHl(o.v, q) + '</span><span class="spo-ac-style">' + _escWip(o.sub) + '</span></div>'; }).join('')
+        : '<div class="spo-ac-empty">' + (kind === 'spo' ? 'SPO' : 'Material') + ' tidak ditemukan</div>';
+      drop.classList.add('open');
+    }
+    input.oninput = function() {
+      renderDrop();
+      var raw = input.value.trim().toLowerCase();
+      if (!raw) { soTblApplyFilter(k, kind, ''); return; }
+      var m = soTblOptions(k, kind, true).filter(function(o) { return o.v.toLowerCase() === raw; })[0];
+      if (!m) return; // belum persis salah satu pilihan -> tabel belum berubah
+      input.value = m.v;
+      soTblApplyFilter(k, kind, m.v);
+    };
+    input.onfocus = renderDrop;
+    drop.addEventListener('click', function(e) {
+      var it = e.target.closest('[data-v]');
+      if (!it) return;
+      input.value = it.getAttribute('data-v');
+      drop.classList.remove('open');
+      soTblApplyFilter(k, kind, input.value);
+    });
+  }
+
+  function soTblSyncStyle(k) {
+    var T = soTbl[k], st = '';
+    if (T.F.spo) { for (var i = 0; i < T.rows.length; i++) if (T.rows[i].spo === T.F.spo) { st = T.rows[i].style; break; } }
+    var box = document.getElementById('soTfStyle-' + k);
+    box.textContent = st || 'Pilih atau ketik SPO';
+    box.className = st ? 'style-display filled' : 'style-display';
+  }
+
+  function soTblApplyFilter(k, kind, val) {
+    var T = soTbl[k], other = kind === 'spo' ? 'material' : 'spo';
+    T.F[kind] = val;
+    if (T.F[other] && !soTblOptions(k, other).some(function(o) { return o.v === T.F[other]; })) {
+      T.F[other] = '';
+      document.getElementById(other === 'spo' ? 'soTfSpo-' + k : 'soTfMat-' + k).value = '';
+    }
+    soTblSyncStyle(k);
+    soTblRender(k);
+  }
+
+  function soTblResetFilters(k) {
+    var T = soTbl[k];
+    T.F = { spo: '', material: '' };
+    document.getElementById('soTfSpo-' + k).value = '';
+    document.getElementById('soTfMat-' + k).value = '';
+    soTblSyncStyle(k);
+    soTblRender(k);
+  }
+
+  function soTblRender(k) {
+    var T = soTbl[k], html = '';
+    T.rows.forEach(function(r, i) {
+      if (T.F.spo && r.spo !== T.F.spo) return;
+      if (T.F.material && r.material !== T.F.material) return;
+      if (T.onlySel && !soTblActive(k, i)) return;
+      var s = soTblSt(k, i);
+      var over = !s.all && s.qty !== '' && parseFloat(s.qty) > r.wip;
+      var need = soTblActive(k, i) && !s.pic.trim();
+      var q = '\'' + k + '\',' + i;
+      html += '<tr class="' + (soTblActive(k, i) ? 'on' : '') + '">'
+        + '<td class="sticky">' + _escToday(r.spo) + '</td>'
+        + '<td>' + _escToday(r.style) + '</td>'
+        + '<td class="mat" title="' + _escWip(r.material) + '">' + _escToday(r.material) + '</td>'
+        + '<td>' + _escToday(r.unit) + '</td>'
+        + '<td class="wipc">' + _escToday(r.wip) + '</td>'
+        + '<td><input class="so-q' + (over ? ' err' : '') + '" type="number" inputmode="decimal" min="0" step="any" placeholder="0" value="' + (s.all ? _escWip(r.wip) : _escWip(s.qty)) + '"' + (s.all ? ' disabled' : '') + ' oninput="soTblSetQty(' + q + ',this)"></td>'
+        + '<td style="text-align:center"><input class="so-chk" type="checkbox"' + (s.all ? ' checked' : '') + ' onchange="soTblSetAll(' + q + ',this.checked)"></td>'
+        + '<td><input class="so-t" type="text" placeholder="Catatan..." value="' + _escWip(s.remark) + '" oninput="soTblSetText(' + q + ',\'remark\',this)"></td>'
+        + '<td><input class="so-t' + (need ? ' need' : '') + '" type="text" list="soPicList-' + k + '" placeholder="PIC Terima" value="' + _escWip(s.pic) + '" oninput="soTblSetText(' + q + ',\'pic\',this)"></td>'
+        + '</tr>';
+    });
+    document.getElementById('soTbody-' + k).innerHTML = html || '<tr><td colspan="9" class="so-empty">' + (T.rows.length ? 'Tidak ada baris yang cocok dengan filter' : 'Belum ada Material dengan WIP Unit untuk divisi ' + SPA_OUT_CFG[k].divisi) + '</td></tr>';
+    soTblStats(k);
+  }
+
+  // Ketik Qty Out: tabel tidak digambar ulang supaya fokus keyboard tidak hilang
+  function soTblSetQty(k, i, el) {
+    var s = soTblSt(k, i), r = soTbl[k].rows[i];
+    s.qty = el.value;
+    var over = parseFloat(el.value) > r.wip;
+    el.classList.toggle('err', over);
+    if (over) showToast('⚠️ Qty Out ' + r.material + ' melebihi WIP Unit (' + r.wip + ')', 'error');
+    el.closest('tr').classList.toggle('on', soTblActive(k, i));
+    var pic = el.closest('tr').querySelectorAll('.so-t')[1];
+    if (pic) pic.classList.toggle('need', soTblActive(k, i) && !s.pic.trim());
+    soTblStats(k);
+  }
+  function soTblSetAll(k, i, on) { var s = soTblSt(k, i); s.all = on; if (on) s.qty = ''; soTblRender(k); }
+  function soTblSetText(k, i, field, el) {
+    var s = soTblSt(k, i);
+    s[field] = el.value;
+    if (field === 'pic') el.classList.toggle('need', soTblActive(k, i) && !s.pic.trim());
+  }
+
+  function soTblApplyBulk(k) {
+    var v = document.getElementById('soTbulk-' + k).value.trim();
+    if (!v) { showToast('⚠️ Isi PIC Terima dulu', 'error'); return; }
+    var n = 0;
+    soTbl[k].rows.forEach(function(r, i) { if (soTblActive(k, i)) { soTblSt(k, i).pic = v; n++; } });
+    if (!n) { showToast('⚠️ Belum ada baris terpilih', 'error'); return; }
+    soTblRender(k);
+    showToast('✓ PIC Terima diisi ke ' + n + ' baris', 'success');
+  }
+  function soTblToggleOnly(k) {
+    var T = soTbl[k];
+    T.onlySel = !T.onlySel;
+    document.getElementById('soTonly-' + k).classList.toggle('on', T.onlySel);
+    soTblRender(k);
+  }
+  function soTblClear(k) { soTbl[k].S = {}; soTblRender(k); }
+
+  function soTblStats(k) {
+    var T = soTbl[k], n = 0, byUnit = {};
+    T.rows.forEach(function(r, i) { if (soTblActive(k, i)) { n++; byUnit[r.unit] = (byUnit[r.unit] || 0) + soTblOut(k, i); } });
+    var units = Object.keys(byUnit).map(function(u) { return Math.round(byUnit[u] * 100) / 100 + ' ' + u; }).join(' · ') || '-';
+    document.getElementById('soTstats-' + k).innerHTML = '<div class="today-stats" style="margin-bottom:10px">'
+      + '<div class="today-stat-chip"><span class="today-stat-value">' + n + '</span><span class="today-stat-label">Baris akan dikirim</span></div>'
+      + '<div class="today-stat-chip" style="flex:2"><span class="today-stat-value" style="font-size:13px;line-height:1.7">' + _escWip(units) + '</span><span class="today-stat-label">Total Qty Out</span></div>'
+      + '</div>';
+    document.getElementById('soTbtn-' + k).innerHTML = '<i class="ti ti-send" style="font-size:18px"></i> Kirim' + (n ? ' (' + n + ' baris)' : '');
+  }
+
+  function collectSoTblData(k) {
+    var tanggal = document.getElementById('soTanggal-' + k).value;
+    if (!tanggal) return { error: 'Tanggal harus diisi' };
+    var T = soTbl[k], picLabel = SPA_OUT_CFG[k].picLabel, rows = [], err = null;
+    T.rows.forEach(function(r, i) {
+      if (err || !soTblActive(k, i)) return;
+      var s = soTblSt(k, i);
+      var qty = s.all ? r.wip : parseFloat(s.qty);
+      if (!s.all && qty > r.wip + 0.00001) { err = 'Qty Out ' + r.material + ' (SPO ' + r.spo + ') melebihi WIP Unit (' + r.wip + ')'; return; }
+      if (!s.pic.trim()) { err = picLabel + ' wajib diisi untuk ' + r.material + ' (SPO ' + r.spo + ')'; return; }
+      rows.push({ spo: r.spo, style: r.style, material: r.material, unit: r.unit, cons: r.cons === null ? '' : r.cons, qty: String(qty), pic: s.pic.trim(), remark: s.remark.trim() });
+    });
+    if (err) return { error: err };
+    if (!rows.length) return { error: 'Centang All Out? atau isi Qty Out minimal 1 baris' };
+    return { tanggal: tanggal, rows: rows };
+  }
+
   function resetSoForm(k) {
+    if (SPA_OUT_CFG[k].tableMode) { resetSoTable(k); return; }
     var cont = document.getElementById('soGroups-' + k);
     cont.querySelectorAll('.spo-group').forEach(function(g) { delete soGroupsData[g.id.replace('so-group-', '')]; });
     cont.innerHTML = '';
@@ -14262,6 +14537,7 @@
       soState[k].items = data.items || [];
       soState[k].pics = data.pics || [];
       setSoStatus(k, 'ok', soSpoList(k).length);
+      if (SPA_OUT_CFG[k].tableMode) { soTblBuild(k); soTblRender(k); return; }
       // Data baru masuk: baris yang sudah terisi dievaluasi ulang (Unit/Con's/WIP)
       document.querySelectorAll('#soGroups-' + k + ' .spo-group').forEach(function(g) {
         var gid = g.id.replace('so-group-', '');
@@ -14649,7 +14925,7 @@
 
   function submitSoForm(k) {
     if (!_soReady()) return;
-    var data = collectSoData(k);
+    var data = SPA_OUT_CFG[k].tableMode ? collectSoTblData(k) : collectSoData(k);
     if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
     showLoading(true);
     var url = GAS_SPA_URL + '?type=save_spa_out&menu=' + k + '&payload=' + encodeURIComponent(JSON.stringify(data));
