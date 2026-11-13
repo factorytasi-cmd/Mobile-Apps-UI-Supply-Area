@@ -646,6 +646,33 @@
     .so-t:focus { border-color: #65A30D; }
     .so-t.need { border-color: #DC3545; background: #FDECEE; }
     .so-submitbar { position: sticky; bottom: 0; z-index: 30; padding: 12px 0 8px; background: linear-gradient(to top, #F0F2F1 70%, rgba(240,242,241,0)); }
+    /* ===== REKAP OUTSTANDING — tampilan tabel ===== */
+    .rk-tbl { border-collapse: separate; border-spacing: 0; min-width: 1100px; }
+    .rk-tbl th.sticky, .rk-tbl td.sticky { position: sticky; left: 0; z-index: 2; background: #fff; box-shadow: 2px 0 0 #E6E8E6; }
+    .rk-tbl th.sticky { background: #F7F8F7; z-index: 3; }
+    .rk-tbl td.sticky { font-weight: 700; }
+    .rk-tbl th.num, .rk-tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .rk-tbl td.clip { max-width: 170px; overflow: hidden; text-overflow: ellipsis; }
+    .rk-tbl td.neg { color: #DC2626; font-weight: 700; }
+    .rk-tbl td.wipb { font-weight: 800; color: #0369A1; }
+    /* ===== Project > Lembar Hasil Cutting ===== */
+    .card-pj  { background: rgba(13,148,136,0.1); border: 0.5px solid rgba(13,148,136,0.25); }
+    .badge-pj { background: rgba(13,148,136,0.15); color: #0F5D54; }
+    .icon-pj  { background: rgba(13,148,136,0.15); }
+    .btn-pj   { background: rgba(13,148,136,0.1); color: #0F5D54; border-color: rgba(13,148,136,0.32); }
+    #page-lembar-cutting .form-header-pill { background: rgba(13,148,136,0.12); border-color: rgba(13,148,136,0.3); }
+    #page-lembar-cutting .form-header-pill i { color: #0D9488; }
+    #page-lembar-cutting .form-header-pill-txt { color: #0F5D54; }
+    #lcBtn { background: linear-gradient(135deg, #0D9488, #14B8A6); box-shadow: 0 4px 16px rgba(13,148,136,0.3); }
+    #lcBtn:disabled { opacity: .6; }
+    .lc-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .lc-photo-area { position: relative; border: 1.5px dashed #BFE3DE; background: rgba(13,148,136,0.05); border-radius: 14px; height: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #0F5D54; font-size: 11.5px; font-weight: 600; cursor: pointer; overflow: hidden; }
+    .lc-photo-area i { font-size: 26px; }
+    .lc-photo-area img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .lc-photo-area .lc-photo-x { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%; background: rgba(0,0,0,.6); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .lc-photo-area .lc-photo-kb { position: absolute; left: 6px; bottom: 6px; background: rgba(0,0,0,.6); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 99px; }
+    .lc-hint { font-size: 10.5px; color: #999; margin-top: 6px; }
+    .lc-link { color: #0D9488; font-weight: 700; text-decoration: none; }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -738,27 +765,27 @@
     .content-zone, .form-zone { padding-top: 16px; }
 
     /* ---- Halaman hub (daftar menu section) bergaya daftar baris ---- */
-    #page-cutting .cards, #page-cutting-synthetic .cards, #page-accessories .cards, #page-spa-factory .cards, #page-ganti-pola .cards {
+    #page-cutting .cards, #page-cutting-synthetic .cards, #page-accessories .cards, #page-spa-factory .cards, #page-ganti-pola .cards , #page-project .cards {
       gap: 0; background: #fff; border: 1px solid var(--app-line); border-radius: 16px; overflow: hidden; }
-    #page-cutting .card, #page-cutting-synthetic .card, #page-accessories .card, #page-spa-factory .card, #page-ganti-pola .card {
+    #page-cutting .card, #page-cutting-synthetic .card, #page-accessories .card, #page-spa-factory .card, #page-ganti-pola .card , #page-project .card {
       background: #fff !important; border: none !important; border-bottom: 1px solid #EEF0EE !important; border-radius: 0; opacity: 1; }
-    #page-cutting .card:last-child, #page-cutting-synthetic .card:last-child, #page-accessories .card:last-child, #page-spa-factory .card:last-child, #page-ganti-pola .card:last-child { border-bottom: none !important; }
-    #page-cutting .card:active, #page-cutting-synthetic .card:active, #page-accessories .card:active, #page-spa-factory .card:active, #page-ganti-pola .card:active { transform: none; background: #F6F7F6 !important; }
-    #page-cutting .card-inner, #page-cutting-synthetic .card-inner, #page-accessories .card-inner, #page-spa-factory .card-inner, #page-ganti-pola .card-inner {
+    #page-cutting .card:last-child, #page-cutting-synthetic .card:last-child, #page-accessories .card:last-child, #page-spa-factory .card:last-child, #page-ganti-pola .card:last-child , #page-project .card:last-child { border-bottom: none !important; }
+    #page-cutting .card:active, #page-cutting-synthetic .card:active, #page-accessories .card:active, #page-spa-factory .card:active, #page-ganti-pola .card:active , #page-project .card:active { transform: none; background: #F6F7F6 !important; }
+    #page-cutting .card-inner, #page-cutting-synthetic .card-inner, #page-accessories .card-inner, #page-spa-factory .card-inner, #page-ganti-pola .card-inner , #page-project .card-inner {
       padding: 13px 14px; display: grid; grid-template-columns: 42px 1fr 14px; column-gap: 12px; align-items: center; }
-    #page-cutting .card-top, #page-cutting-synthetic .card-top, #page-accessories .card-top, #page-spa-factory .card-top, #page-ganti-pola .card-top { display: contents; }
-    #page-cutting .card-badge, #page-cutting-synthetic .card-badge, #page-accessories .card-badge, #page-spa-factory .card-badge, #page-ganti-pola .card-badge { display: none; }
-    #page-cutting .card-icon-wrap, #page-cutting-synthetic .card-icon-wrap, #page-accessories .card-icon-wrap, #page-spa-factory .card-icon-wrap, #page-ganti-pola .card-icon-wrap {
+    #page-cutting .card-top, #page-cutting-synthetic .card-top, #page-accessories .card-top, #page-spa-factory .card-top, #page-ganti-pola .card-top , #page-project .card-top { display: contents; }
+    #page-cutting .card-badge, #page-cutting-synthetic .card-badge, #page-accessories .card-badge, #page-spa-factory .card-badge, #page-ganti-pola .card-badge , #page-project .card-badge { display: none; }
+    #page-cutting .card-icon-wrap, #page-cutting-synthetic .card-icon-wrap, #page-accessories .card-icon-wrap, #page-spa-factory .card-icon-wrap, #page-ganti-pola .card-icon-wrap , #page-project .card-icon-wrap {
       grid-column: 1; grid-row: 1 / span 2; width: 42px; height: 42px; border-radius: 13px; }
-    #page-cutting .card-title, #page-cutting-synthetic .card-title, #page-accessories .card-title, #page-spa-factory .card-title, #page-ganti-pola .card-title {
+    #page-cutting .card-title, #page-cutting-synthetic .card-title, #page-accessories .card-title, #page-spa-factory .card-title, #page-ganti-pola .card-title , #page-project .card-title {
       grid-column: 2; grid-row: 1; font-size: 14px; font-weight: 700; margin: 0; letter-spacing: -.005em; }
-    #page-cutting .card-desc, #page-cutting-synthetic .card-desc, #page-accessories .card-desc, #page-spa-factory .card-desc, #page-ganti-pola .card-desc {
+    #page-cutting .card-desc, #page-cutting-synthetic .card-desc, #page-accessories .card-desc, #page-spa-factory .card-desc, #page-ganti-pola .card-desc , #page-project .card-desc {
       grid-column: 2; grid-row: 2; font-size: 11.5px; margin: 2px 0 0; color: #8A8F8A; line-height: 1.35; }
-    #page-cutting .card-footer, #page-cutting-synthetic .card-footer, #page-accessories .card-footer, #page-spa-factory .card-footer, #page-ganti-pola .card-footer { display: none; }
-    #page-cutting .card-inner::after, #page-cutting-synthetic .card-inner::after, #page-accessories .card-inner::after, #page-spa-factory .card-inner::after, #page-ganti-pola .card-inner::after {
+    #page-cutting .card-footer, #page-cutting-synthetic .card-footer, #page-accessories .card-footer, #page-spa-factory .card-footer, #page-ganti-pola .card-footer , #page-project .card-footer { display: none; }
+    #page-cutting .card-inner::after, #page-cutting-synthetic .card-inner::after, #page-accessories .card-inner::after, #page-spa-factory .card-inner::after, #page-ganti-pola .card-inner::after , #page-project .card-inner::after {
       content: '\203A'; grid-column: 3; grid-row: 1 / span 2; font-size: 24px; line-height: 1; color: #C5C8C5; }
     #page-cutting .card-syn-placeholder .card-inner, #page-cutting-synthetic .card-syn-placeholder .card-inner, #page-accessories .card-syn-placeholder .card-inner,
-    #page-spa-factory .card-syn-placeholder .card-inner, #page-ganti-pola .card-syn-placeholder .card-inner { opacity: .5; }
+    #page-spa-factory .card-syn-placeholder .card-inner, #page-ganti-pola .card-syn-placeholder .card-inner , #page-project .card-syn-placeholder .card-inner { opacity: .5; }
 
     /* ---- Beranda ---- */
     .ah-hero { background: #0A1A1D; color: #fff; padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 56px; border-radius: 0 0 28px 28px; }
@@ -1205,6 +1232,23 @@
           </div>
         </div>
 
+        <div class="card card-pj" onclick="goTo('page-project')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-pj">Project</span>
+              <div class="card-icon-wrap icon-pj">
+                <i class="ti ti-folders" style="font-size:20px;color:#0D9488"></i>
+              </div>
+            </div>
+            <div class="card-title">Project</div>
+            <div class="card-desc">Kumpulan menu project cutting kulit, mulai dari Lembar Hasil Cutting</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-layers-subtract" style="font-size:13px"></i> 1 menu</span>
+              <span class="card-btn btn-pj">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1408,6 +1452,224 @@
         <div id="gpStStats"></div>
         <div class="wip-list" id="gpStatusList"><div class="wip-empty">Memuat data...</div></div>
       </div>
+
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: PROJECT (CUTTING KULIT SECTION) ==================== -->
+  <div class="page" id="page-project">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-cutting')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:18px;letter-spacing:2px">PROJECT</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0D9488,#2DD4BF)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › PROJECT</div>
+    </div>
+
+    <div class="content-zone">
+      <div class="section-lbl">Pilih Menu</div>
+      <div class="cards">
+
+        <div class="card card-pj" onclick="goTo('page-lembar-cutting')">
+          <div class="card-inner">
+            <div class="card-top">
+              <span class="card-badge badge-pj">Input</span>
+              <div class="card-icon-wrap icon-pj">
+                <i class="ti ti-camera" style="font-size:20px;color:#0D9488"></i>
+              </div>
+            </div>
+            <div class="card-title">Lembar Hasil Cutting</div>
+            <div class="card-desc">Catat hasil cek lembar per OPCK beserta SF, Lot, dan foto lembar</div>
+            <div class="card-footer">
+              <span class="card-hint"><i class="ti ti-photo" style="font-size:13px"></i> Input + foto</span>
+              <span class="card-btn btn-pj">Buka <i class="ti ti-arrow-right" style="font-size:14px"></i></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-zone">
+      <div class="live-row">
+        <div class="live-dot"></div>
+        <div class="live-txt">Sistem aktif — PT. ASI Supply Division</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE: LEMBAR HASIL CUTTING ==================== -->
+  <div class="page" id="page-lembar-cutting">
+    <div class="header-zone">
+      <div class="status-bar">
+        <span>PT. ASI</span>
+        <span class="waktu-el">--:--</span>
+      </div>
+      <div class="logo-wrap">
+        <div class="logo-box">L</div>
+        <div class="logo-text">LITRA-ASI</div>
+      </div>
+      <div class="tagline">Leading Industrial Transformation</div>
+      <div class="subtitle">Lean Intelligence Tracking &amp; Realtime Analytics — ASI</div>
+      <div class="date-pill">
+        <span>
+          <i class="ti ti-calendar" style="font-size:13px"></i>
+          <span class="tgl-el">Memuat...</span>
+        </span>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:14px">
+        <div class="back-btn" onclick="goTo('page-project')">
+          <i class="ti ti-arrow-left" style="font-size:14px"></i> Kembali
+        </div>
+      </div>
+    </div>
+
+    <div class="area-label">
+      <div class="area-label-text" style="font-size:16px;letter-spacing:2px">LEMBAR HASIL CUTTING</div>
+      <div class="area-divider" style="background:linear-gradient(90deg,#0D9488,#2DD4BF)"></div>
+    </div>
+    <div style="text-align:center;margin-top:6px">
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1px">SUPPLY AREA › CUTTING KULIT › PROJECT › LEMBAR HASIL CUTTING</div>
+    </div>
+
+    <div class="form-zone">
+
+      <div class="form-header-pill">
+        <i class="ti ti-camera"></i>
+        <div>
+          <div class="form-header-pill-txt">Lembar Hasil Cutting</div>
+          <div class="form-header-pill-sub">Project — Cutting Kulit Section</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Tanggal</label>
+        <input type="date" class="field-input" id="lcTanggal">
+      </div>
+
+      <div class="field-group" style="display:flex;align-items:center;justify-content:space-between">
+        <label class="field-label" style="margin-bottom:0">Data OPCK (Master_List_Cek Lembar Kulit)</label>
+        <span id="lcStatus" style="font-size:9px;font-weight:500;padding:2px 8px;border-radius:99px;background:rgba(13,148,136,0.12);color:#0F5D54;letter-spacing:0.5px">⏳ Memuat...</span>
+      </div>
+      <div class="load-time-note" id="lcLoadTime"></div>
+      <div class="load-error-row" id="lcErrorRow" style="display:none">
+        <span id="lcErrorMsg"></span>
+        <button type="button" class="retry-btn" onclick="loadLcMaster()"><i class="ti ti-refresh" style="font-size:13px"></i> Coba Lagi</button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">SPO</label>
+        <div class="spo-ac-wrap so-ac-wrap">
+          <input type="text" class="field-input" id="lcSpo" placeholder="Ketik / pilih nomor SPO..." autocomplete="off">
+          <div class="spo-ac-drop" id="lcSpoDrop"></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Style <span class="so-auto">(otomatis dari SPO)</span></label>
+        <div class="style-display" id="lcStyle">Pilih atau ketik SPO</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Size</label>
+        <div class="spo-ac-wrap so-ac-wrap">
+          <input type="text" class="field-input" id="lcSize" placeholder="Ketik / pilih Size..." autocomplete="off">
+          <div class="spo-ac-drop" id="lcSizeDrop"></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">OPCK <span class="so-auto">(saran sesuai SPO &amp; Size)</span></label>
+        <div class="spo-ac-wrap so-ac-wrap">
+          <input type="text" class="field-input" id="lcOpck" placeholder="Ketik / pilih No. OPCK..." autocomplete="off">
+          <div class="spo-ac-drop" id="lcOpckDrop"></div>
+        </div>
+      </div>
+
+      <div class="row-grid">
+        <div class="field-group">
+          <label class="field-label">Nama Operator <span class="so-auto">(otomatis)</span></label>
+          <div class="style-display" id="lcOperator">Pilih OPCK dahulu</div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Absen Operator <span class="so-auto">(otomatis)</span></label>
+          <div class="style-display" id="lcAbsen">-</div>
+        </div>
+      </div>
+
+      <div class="row-grid">
+        <div class="field-group">
+          <label class="field-label">SF</label>
+          <input type="text" inputmode="decimal" class="field-input" id="lcSf" placeholder="0">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Lot</label>
+          <input type="text" class="field-input" id="lcLot" placeholder="No. Lot" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="lc-photos">
+        <div class="lc-photo" id="lcPhotoBox1">
+          <label class="field-label">Foto 1 <span class="so-auto">(opsional)</span></label>
+          <div class="lc-photo-area" id="lcPhotoArea1" onclick="lcPickPhoto(1)">
+            <i class="ti ti-camera-plus"></i><span>Ambil / pilih foto</span>
+          </div>
+          <input type="file" accept="image/*" capture="environment" id="lcFile1" style="display:none" onchange="lcFileChosen(1, this)">
+        </div>
+        <div class="lc-photo" id="lcPhotoBox2">
+          <label class="field-label">Foto 2 <span class="so-auto">(opsional)</span></label>
+          <div class="lc-photo-area" id="lcPhotoArea2" onclick="lcPickPhoto(2)">
+            <i class="ti ti-camera-plus"></i><span>Ambil / pilih foto</span>
+          </div>
+          <input type="file" accept="image/*" capture="environment" id="lcFile2" style="display:none" onchange="lcFileChosen(2, this)">
+        </div>
+      </div>
+      <div class="lc-hint">Foto otomatis dikecilkan sebelum dikirim, jadi hemat kuota dan cepat terkirim.</div>
+
+      <div class="divider"></div>
+
+      <button class="btn-submit" id="lcBtn" onclick="submitLc()">
+        <i class="ti ti-send" style="font-size:18px"></i> Kirim
+      </button>
+
+      <div class="today-label"><i class="ti ti-list-check" style="font-size:15px"></i> Cek Data Terkirim</div>
+      <div class="today-tabs" id="lcTodayTabs">
+        <button type="button" class="today-tab-btn active" onclick="_todayTabClick('lcTodayTabs','lcTodayList',0,this,loadTodayLc)">Hari Ini</button>
+        <button type="button" class="today-tab-btn" onclick="_todayTabClick('lcTodayTabs','lcTodayList',1,this,loadTodayLc)">Kemarin</button>
+      </div>
+      <div class="load-time-note" id="lcTodayLoadTime"></div>
+      <div id="lcTodayList" class="today-list"><div class="wip-empty">Pilih tab di atas untuk memuat data.</div></div>
 
     </div>
 
@@ -4609,6 +4871,8 @@
   var GAS_SPA_URL = 'https://script.google.com/macros/s/AKfycbxC8QmObuMULDKqbmsrBiPBvtTuRTdIGVj7zHAEJ8nMHVgSX-G1nBHYyKwsMvJLjww/exec';
   var GAS_ACCESSORIES_URL ='https://script.google.com/macros/s/AKfycby74BqjYolsANHnUrpDGM5RxG3OSQRudIJ_s6Hbot85vFTHCK6X8YfHBbRHcMY75ElI/exec';
   // Ganti Pola & Tracking Memo Kulit = project Apps Script sendiri (sheet MEMO KULIT). Kosong = MODE DEMO.
+  // Lembar Hasil Cutting (menu Project) = project Apps Script sendiri di akun cuttingkulitfoto1 (CodeLembarCutting.gs). Isi setelah deploy.
+  var GAS_LEMBAR_URL = 'https://script.google.com/macros/s/AKfycbzYco3PTtx8hLu3EIJwJeB3vEJKe-9jWTtyliPdCXV4mY59Vu3SrYLkgui8cwtk65CRwg/exec';
   var GAS_MEMO_URL = 'https://script.google.com/macros/s/AKfycbzqEsXCZ4rszh5uhlRiVgflhVcg4hX6QZnr7nHPOAbLTG__5uVpZmRFYOXTPO0Jvhk/exec';
   // ============================================================
 
@@ -4726,6 +4990,7 @@
     if (pageId === "page-spa-in") initSpForm();
     if (pageId === "page-spa-rekap") initSpRekapPage();
     if (pageId === "page-memo-kulit") initMk();
+    if (pageId === "page-lembar-cutting") initLc();
     if (pageId === "page-gp-kulit") initGp();
     if (pageId === "page-spa-out-dist") initSoPage('dist');
     if (pageId === "page-spa-out-line") initSoPage('line');
@@ -12359,10 +12624,15 @@
   var SPA_DIVISI = ['DISTRIBUSI', 'LINE', 'ACCESSORIES'];
 
   // Con's terakhir untuk Style+Material (dari kolom M "REKAP OUTSTANDING"); null kalau belum pernah ada.
+  // Con's bawaan: 1) kolom D sheet DATABASE_INVENTORY (Style+Komponen), 2) kalau kosong, Con's terakhir di REKAP OUTSTANDING.
   function spFindCons(style, material) {
     var s = (style || '').trim().toLowerCase();
     var m = (material || '').trim().toLowerCase();
     if (!s || !m) return null;
+    for (var j = 0; j < spMaster.inventory.length; j++) {
+      var iv = spMaster.inventory[j];
+      if (iv.cons != null && iv.style.toLowerCase() === s && iv.komponen.toLowerCase() === m) return iv.cons;
+    }
     for (var i = 0; i < spMaster.cons.length; i++) {
       var r = spMaster.cons[i];
       if (r.style.toLowerCase() === s && r.material.toLowerCase() === m) return r.cons;
@@ -12855,6 +13125,296 @@
       loadTodaySp();
     });
   }
+
+  // ===== PROJECT > LEMBAR HASIL CUTTING (CUTTING KULIT SECTION) =====
+  // Form: Tanggal, SPO (suggest), Style (otomatis), Size (suggest), OPCK (suggest, difilter SPO+Size),
+  // Nama Operator & Absen (otomatis dari OPCK), SF, Lot, Foto 1, Foto 2 (opsional). Sumber suggest: sheet
+  // "Master_List_Cek Lembar Kulit". Backend TERPISAH (GAS_LEMBAR_URL = CodeLembarCutting.gs, akun
+  // cuttingkulitfoto1): foto disimpan ke Google Drive, link foto dicetak di "Report_Lembar Hasil Cutting".
+  // Foto dikecilkan di HP dulu (maks 1280 px, JPEG) lalu dikirim lewat POST (text/plain, tanpa preflight CORS).
+  // Dibungkus IIFE; hanya fungsi yang dipanggil dari HTML yang dibuka ke window.
+  (function() {
+    var LC_MAX_SIDE = 1280, LC_QUALITY = 0.72, LC_POST_TIMEOUT_MS = 90000;
+    var lc = { rows: [], sel: { spo: '', style: '', size: '', opck: '', operator: '', absen: '' }, photos: { 1: null, 2: null }, submitId: '', busy: false };
+
+    function esc(v) {
+      return String(v == null ? '' : v).replace(/[&<>"']/g, function(c) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; });
+    }
+    function $(id) { return document.getElementById(id); }
+    function newId() { return 'lc_' + Date.now() + '_' + Math.floor(Math.random() * 1e9).toString(36); }
+    function lcReady() {
+      if (GAS_LEMBAR_URL) return true;
+      showToast('URL backend Lembar Hasil Cutting belum diisi di HTML (GAS_LEMBAR_URL)', 'error');
+      return false;
+    }
+
+    function initLc() {
+      var t = new Date();
+      $('lcTanggal').value = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
+      resetLcForm();
+      loadLcMaster();
+      Array.prototype.forEach.call($('lcTodayTabs').querySelectorAll('.today-tab-btn'), function(b, i) { b.classList.toggle('active', i === 0); });
+      $('lcTodayList').innerHTML = '<div class="wip-empty">Pilih tab di atas untuk memuat data.</div>';
+      setupAC('lcSpo', 'lcSpoDrop', 'spo');
+      setupAC('lcSize', 'lcSizeDrop', 'size');
+      setupAC('lcOpck', 'lcOpckDrop', 'opck');
+    }
+
+    function resetLcForm() {
+      lc.sel = { spo: '', style: '', size: '', opck: '', operator: '', absen: '' };
+      lc.submitId = newId();
+      ['lcSpo', 'lcSize', 'lcOpck', 'lcSf', 'lcLot'].forEach(function(id) { $(id).value = ''; });
+      syncAuto();
+      clearPhoto(1); clearPhoto(2);
+    }
+
+    function loadLcMaster() {
+      if (!GAS_LEMBAR_URL) { setStatus('nourl'); return; }
+      setStatus('loading');
+      $('lcLoadTime').textContent = '';
+      _hideLoadError('lc');
+      var t0 = Date.now();
+      jsonp(GAS_LEMBAR_URL + '?type=lembar_master', function(err, data) {
+        _showLoadTime('lcLoadTime', Date.now() - t0);
+        if (err || !data || data.status !== 'ok') { setStatus('error'); _showLoadError('lc', err, data); return; }
+        lc.rows = data.rows || [];
+        setStatus('ok', lc.rows.length);
+        revalidate();
+      });
+    }
+
+    function setStatus(state, count) {
+      var el = $('lcStatus');
+      if (state === 'loading') { el.textContent = '⏳ Memuat...'; el.style.background = 'rgba(13,148,136,0.12)'; el.style.color = '#0F5D54'; }
+      else if (state === 'ok') { el.textContent = '✓ ' + count + ' OPCK tersedia'; el.style.background = 'rgba(29,158,117,0.15)'; el.style.color = '#0A5C42'; }
+      else if (state === 'nourl') { el.textContent = '✕ URL backend belum diisi'; el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B'; }
+      else { el.textContent = '✕ Gagal memuat data'; el.style.background = 'rgba(220,53,69,0.15)'; el.style.color = '#7D1B1B'; }
+    }
+
+    // ---- Pilihan suggest: SPO -> Size (sesuai SPO) -> OPCK (sesuai SPO + Size) ----
+    function options(kind) {
+      var s = lc.sel, seen = {}, out = [];
+      lc.rows.forEach(function(r) {
+        if (kind !== 'spo' && s.spo && r.spo !== s.spo) return;
+        if (kind === 'opck' && s.size && r.size !== s.size) return;
+        var v = r[kind];
+        if (!v || seen[v]) return;
+        seen[v] = true;
+        out.push({ v: v, sub: kind === 'spo' ? r.style : (kind === 'opck' ? r.operator : '') });
+      });
+      return _acSort(out, 'v');
+    }
+    function optionsLoose(kind) { // untuk mencocokkan ketikan: tanpa menyaring oleh pilihan lain
+      var seen = {}, out = [];
+      lc.rows.forEach(function(r) { var v = r[kind]; if (v && !seen[v]) { seen[v] = true; out.push(v); } });
+      return out;
+    }
+
+    function setupAC(inputId, dropId, kind) {
+      var input = $(inputId), drop = $(dropId);
+      if (input._lcWired) return;
+      input._lcWired = true;
+      function renderDrop() {
+        if (kind === 'opck' && !lc.sel.spo) {
+          drop.innerHTML = '<div class="spo-ac-empty">Pilih atau ketik SPO dahulu</div>';
+          drop.classList.add('open');
+          return;
+        }
+        var q = input.value.toLowerCase().trim();
+        var list = options(kind).filter(function(o) { return !q || o.v.toLowerCase().indexOf(q) >= 0; });
+        if (!lc.rows.length) drop.innerHTML = '<div class="spo-ac-empty">Data belum dimuat / kosong</div>';
+        else if (!list.length) drop.innerHTML = '<div class="spo-ac-empty">' + kind.toUpperCase() + ' tidak ditemukan</div>';
+        else drop.innerHTML = list.map(function(o) {
+          return '<div class="spo-ac-item" data-v="' + esc(o.v) + '"><span class="spo-ac-spo">' + _soHl(o.v, q) + '</span>' + (o.sub ? '<span class="spo-ac-style">' + esc(o.sub) + '</span>' : '') + '</div>';
+        }).join('');
+        drop.classList.add('open');
+      }
+      function apply(val) { lc.sel[kind] = val; revalidate(kind); }
+      input.oninput = function() {
+        renderDrop();
+        var raw = input.value.trim().toLowerCase();
+        var m = raw ? optionsLoose(kind).filter(function(v) { return v.toLowerCase() === raw; })[0] : '';
+        if (m) input.value = m;
+        apply(m || '');
+      };
+      input.onfocus = renderDrop;
+      drop.addEventListener('click', function(e) {
+        var it = e.target.closest('[data-v]');
+        if (!it) return;
+        input.value = it.getAttribute('data-v');
+        drop.classList.remove('open');
+        apply(input.value);
+      });
+    }
+
+    // Setelah satu isian berubah: pilihan hilir yang tak cocok lagi dikosongkan; Style/Operator/Absen disegarkan
+    function revalidate(changed) {
+      var s = lc.sel;
+      if (s.size && !options('size').some(function(o) { return o.v === s.size; })) { s.size = ''; $('lcSize').value = ''; }
+      if (s.opck && !options('opck').some(function(o) { return o.v === s.opck; })) { s.opck = ''; $('lcOpck').value = ''; }
+      syncAuto();
+    }
+
+    function syncAuto() {
+      var s = lc.sel, style = '', operator = '', absen = '';
+      for (var i = 0; i < lc.rows.length; i++) {
+        var r = lc.rows[i];
+        if (!style && s.spo && r.spo === s.spo) style = r.style;
+        if (!operator && s.opck && r.spo === s.spo && r.opck === s.opck && (!s.size || r.size === s.size)) { operator = r.operator; absen = r.absen; }
+      }
+      s.style = style; s.operator = operator; s.absen = absen;
+      $('lcStyle').textContent = style || 'Pilih atau ketik SPO';
+      $('lcStyle').className = style ? 'style-display filled' : 'style-display';
+      $('lcOperator').textContent = operator || (s.opck ? '-' : 'Pilih OPCK dahulu');
+      $('lcOperator').className = operator ? 'style-display filled' : 'style-display';
+      $('lcAbsen').textContent = absen || '-';
+      $('lcAbsen').className = absen ? 'style-display filled' : 'style-display';
+    }
+
+    // ---- Foto: ambil dari kamera / galeri, kecilkan, pratinjau ----
+    function lcPickPhoto(n) { if (!lc.photos[n]) $('lcFile' + n).click(); }
+
+    function compress(file) {
+      return new Promise(function(resolve, reject) {
+        function draw(src, w, h) {
+          var scale = Math.min(1, LC_MAX_SIDE / Math.max(w, h));
+          var cw = Math.round(w * scale), ch = Math.round(h * scale);
+          var cv = document.createElement('canvas');
+          cv.width = cw; cv.height = ch;
+          var ctx = cv.getContext('2d');
+          ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cw, ch);
+          ctx.drawImage(src, 0, 0, cw, ch);
+          resolve(cv.toDataURL('image/jpeg', LC_QUALITY));
+        }
+        if (window.createImageBitmap) {
+          createImageBitmap(file, { imageOrientation: 'from-image' }).then(function(bmp) { draw(bmp, bmp.width, bmp.height); }, fallback);
+        } else { fallback(); }
+        function fallback() {
+          var url = URL.createObjectURL(file), img = new Image();
+          img.onload = function() { URL.revokeObjectURL(url); draw(img, img.naturalWidth, img.naturalHeight); };
+          img.onerror = function() { URL.revokeObjectURL(url); reject(new Error('Foto tidak bisa dibaca')); };
+          img.src = url;
+        }
+      });
+    }
+
+    function lcFileChosen(n, input) {
+      var file = input.files && input.files[0];
+      input.value = '';
+      if (!file) return;
+      compress(file).then(function(dataUrl) {
+        lc.photos[n] = { dataUrl: dataUrl, kb: Math.round(dataUrl.length * 0.75 / 1024) };
+        renderPhoto(n);
+      }, function() { showToast('Foto tidak bisa dibaca — coba ambil ulang', 'error'); });
+    }
+
+    function renderPhoto(n) {
+      var area = $('lcPhotoArea' + n), p = lc.photos[n];
+      if (!p) { area.innerHTML = '<i class="ti ti-camera-plus"></i><span>Ambil / pilih foto</span>'; return; }
+      area.innerHTML = '<img src="' + p.dataUrl + '" alt="Foto ' + n + '"><div class="lc-photo-x" onclick="event.stopPropagation();lcRemovePhoto(' + n + ')"><i class="ti ti-x"></i></div><div class="lc-photo-kb">' + p.kb + ' KB</div>';
+    }
+    function clearPhoto(n) { lc.photos[n] = null; renderPhoto(n); }
+    function lcRemovePhoto(n) { clearPhoto(n); }
+
+    // ---- Kirim ----
+    function collect() {
+      var s = lc.sel, tanggal = $('lcTanggal').value;
+      var sf = $('lcSf').value.trim(), lot = $('lcLot').value.trim();
+      if (!tanggal) return { error: 'Tanggal harus diisi' };
+      if (!s.spo) return { error: 'SPO wajib dipilih dari daftar' };
+      if (!s.size) return { error: 'Size wajib dipilih dari daftar' };
+      if (!s.opck) return { error: 'OPCK wajib dipilih dari daftar agar Operator & Absen terisi' };
+      if (!s.operator) return { error: 'Operator belum terisi — pilih OPCK dari daftar saran' };
+      if (!sf) return { error: 'SF wajib diisi' };
+      if (!lot) return { error: 'Lot wajib diisi' };
+      return {
+        submitId: lc.submitId, tanggal: tanggal, spo: s.spo, style: s.style, size: s.size, opck: s.opck,
+        operator: s.operator, absen: s.absen, sf: sf, lot: lot,
+        foto1: lc.photos[1] ? lc.photos[1].dataUrl.split(',')[1] : '',
+        foto2: lc.photos[2] ? lc.photos[2].dataUrl.split(',')[1] : ''
+      };
+    }
+
+    function finishOk(data) {
+      showToast('✓ Data berhasil disimpan!', 'success');
+      resetLcForm();
+      loadLcMaster();
+      loadTodayLc();
+    }
+
+    function submitLc() {
+      if (lc.busy || !lcReady()) return;
+      var data = collect();
+      if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+      lc.busy = true;
+      $('lcBtn').disabled = true;
+      showLoading(true);
+      var ctrl = window.AbortController ? new AbortController() : null;
+      var timer = setTimeout(function() { if (ctrl) ctrl.abort(); }, LC_POST_TIMEOUT_MS);
+      var sentId = data.submitId;
+
+      fetch(GAS_LEMBAR_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain;charset=utf-8' }, signal: ctrl ? ctrl.signal : undefined })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          clearTimeout(timer); done();
+          if (res && res.status === 'ok') finishOk(res);
+          else showToast('Gagal: ' + (res && res.message ? res.message : 'Coba lagi'), 'error');
+        })
+        .catch(function() {
+          // Balasan tidak sampai: cek apakah pengiriman ini sebenarnya sudah tersimpan
+          clearTimeout(timer);
+          jsonp(GAS_LEMBAR_URL + '?type=lembar_status&id=' + encodeURIComponent(sentId), function(err, st) {
+            done();
+            if (!err && st && st.status === 'ok' && st.found) finishOk(st.result);
+            else showToast('Gagal terima konfirmasi server. Cek "Cek Data Terkirim" dulu sebelum kirim ulang!', 'error');
+          });
+        });
+
+      function done() { lc.busy = false; $('lcBtn').disabled = false; showLoading(false); }
+    }
+
+    // ---- Cek Data Terkirim (Hari Ini / Kemarin) ----
+    function renderToday(rows, dayOffset) {
+      var el = $('lcTodayList'), dayLabel = dayOffset ? 'kemarin' : 'hari ini';
+      if (!rows || !rows.length) { el.innerHTML = '<div class="wip-empty">Belum ada data yang masuk ' + dayLabel + '.</div>'; return; }
+      var link = function(u) { return u ? '<a class="lc-link" href="' + esc(u) + '" target="_blank" rel="noopener">Buka</a>' : '-'; };
+      var html = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [])
+        + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
+        + ['SPO', 'Style', 'Size', 'OPCK', 'Operator', 'Absen', 'SF', 'Lot', 'Foto 1', 'Foto 2'].map(function(c) { return '<th>' + c + '</th>'; }).join('')
+        + '</tr></thead><tbody>'
+        + rows.map(function(r) {
+            return '<tr><td>' + _escToday(r.spo) + '</td><td>' + _escToday(r.style) + '</td><td>' + _escToday(r.size) + '</td><td>' + _escToday(r.opck) + '</td>'
+              + '<td>' + _escToday(r.operator) + '</td><td>' + _escToday(r.absen) + '</td><td>' + _escToday(r.sf) + '</td><td>' + _escToday(r.lot) + '</td>'
+              + '<td>' + link(r.foto1) + '</td><td>' + link(r.foto2) + '</td></tr>';
+          }).join('')
+        + '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
+      el.innerHTML = html;
+    }
+
+    function loadTodayLc(dayOffset) {
+      var id = 'lcTodayList';
+      if (dayOffset == null) dayOffset = _todayActiveDay[id] || 0;
+      _todayActiveDay[id] = dayOffset;
+      var el = $(id);
+      if (!GAS_LEMBAR_URL) { el.innerHTML = '<div class="wip-empty">URL backend Lembar Hasil Cutting belum diisi.</div>'; return; }
+      el.innerHTML = '<div class="wip-empty">Memuat...</div>';
+      $('lcTodayLoadTime').textContent = '';
+      var t0 = Date.now();
+      jsonp(GAS_LEMBAR_URL + '?type=today_lembar&day=' + dayOffset, function(err, data) {
+        _showLoadTime('lcTodayLoadTime', Date.now() - t0);
+        if (err || !data || data.status !== 'ok') { el.innerHTML = '<div class="wip-empty">Gagal memuat. Coba lagi.</div>'; return; }
+        renderToday(data.rows, dayOffset);
+      });
+    }
+
+    window.initLc = initLc;
+    window.loadLcMaster = loadLcMaster;
+    window.lcPickPhoto = lcPickPhoto;
+    window.lcFileChosen = lcFileChosen;
+    window.lcRemovePhoto = lcRemovePhoto;
+    window.submitLc = submitLc;
+    window.loadTodayLc = loadTodayLc;
+  })();
 
   // ===== GANTI POLA KULIT (CUTTING KULIT SECTION > GANTI POLA) =====
   // Tracking sheet "GP SEWING KULIT - 2026" (1 baris sheet = 1 permintaan). Tahap: Sudah Cutting →
@@ -13941,25 +14501,30 @@
         || a.divisi.localeCompare(b.divisi);
     });
     var statsHtml = _renderTodayStatsBar(rows, 'spo', 'Jumlah SPO', []);
-    container.innerHTML = statsHtml + rows.map(function(r) {
-      var gapStyle = (r.gap !== '' && r.gap < 0) ? ' style="color:#DC2626"' : '';
-      return '<div class="wip-item">'
-        + '<div class="wip-item-top"><span class="wip-item-spo">' + _escWip(r.spo) + '</span><span class="wip-item-size">' + _rkFmt(r.divisi) + '</span></div>'
-        + '<div class="wip-item-style">' + _rkFmt(r.style) + '</div>'
-        + '<div class="wip-item-grid">'
-        + '<div class="full"><div class="wip-item-k">Material/Komponen</div><div class="wip-item-v">' + _rkFmt(r.material) + '</div></div>'
-        + '<div><div class="wip-item-k">Unit</div><div class="wip-item-v">' + _rkFmt(r.unit) + '</div></div>'
-        + '<div><div class="wip-item-k">Con\'s Pcs</div><div class="wip-item-v">' + _rkFmt(r.cons) + '</div></div>'
-        + '<div><div class="wip-item-k">Qty Plan Pcs</div><div class="wip-item-v">' + _rkFmt(r.plan) + '</div></div>'
-        + '<div><div class="wip-item-k">Qty Plan Unit</div><div class="wip-item-v">' + _rkFmt(r.planUnit) + '</div></div>'
-        + '<div><div class="wip-item-k">Qty In Unit</div><div class="wip-item-v">' + _rkFmt(r.qtyIn) + '</div></div>'
-        + '<div><div class="wip-item-k">Gap In Unit</div><div class="wip-item-v"' + gapStyle + '>' + _rkFmt(r.gap) + '</div></div>'
-        + '<div><div class="wip-item-k">Qty Out Unit</div><div class="wip-item-v">' + _rkFmt(r.qtyOut) + '</div></div>'
-        + '<div><div class="wip-item-k">WIP Pcs</div><div class="wip-item-v">' + _rkFmt(r.wipPcs) + '</div></div>'
-        + '</div>'
-        + '<div class="wip-item-qty"><span class="wip-item-qty-label">WIP Unit</span><span class="wip-item-qty-value">' + _rkFmt(r.wip) + '</span></div>'
-        + '</div>';
-    }).join('');
+    var cols = ['SPO', 'Style', 'Material/Komponen', 'Unit', 'Divisi', "Con's Pcs", 'Qty Plan Pcs', 'Qty Plan Unit', 'Qty In Unit', 'Gap In Unit', 'Qty Out Unit', 'WIP Unit', 'WIP Pcs'];
+    container.innerHTML = statsHtml
+      + '<div class="today-tablewrap"><table class="today-table rk-tbl"><thead><tr>'
+      + cols.map(function(c, i) { return '<th' + (i === 0 ? ' class="sticky"' : (i >= 5 ? ' class="num"' : '')) + '>' + c + '</th>'; }).join('')
+      + '</tr></thead><tbody>'
+      + rows.map(function(r) {
+          var neg = r.gap !== '' && r.gap < 0;
+          return '<tr>'
+            + '<td class="sticky">' + _escToday(r.spo) + '</td>'
+            + '<td class="clip" title="' + _escWip(r.style) + '">' + _rkFmt(r.style) + '</td>'
+            + '<td class="clip" title="' + _escWip(r.material) + '">' + _rkFmt(r.material) + '</td>'
+            + '<td>' + _rkFmt(r.unit) + '</td>'
+            + '<td>' + _rkFmt(r.divisi) + '</td>'
+            + '<td class="num">' + _rkFmt(r.cons) + '</td>'
+            + '<td class="num">' + _rkFmt(r.plan) + '</td>'
+            + '<td class="num">' + _rkFmt(r.planUnit) + '</td>'
+            + '<td class="num">' + _rkFmt(r.qtyIn) + '</td>'
+            + '<td class="num' + (neg ? ' neg' : '') + '">' + _rkFmt(r.gap) + '</td>'
+            + '<td class="num">' + _rkFmt(r.qtyOut) + '</td>'
+            + '<td class="num wipb">' + _rkFmt(r.wip) + '</td>'
+            + '<td class="num">' + _rkFmt(r.wipPcs) + '</td>'
+            + '</tr>';
+        }).join('')
+      + '</tbody></table></div><div class="today-scroll-hint">← geser tabel ke kanan untuk melihat semua kolom → (kolom SPO tetap menempel di kiri)</div>';
   }
 
   function renderRkMissing() {
@@ -18410,6 +18975,8 @@
     { t: 'Ganti Pola', s: SEC[0], p: 'page-ganti-pola', i: 'ti-replace', f: '#EA580C', b: '#FFEDE0', d: 'Tracking permintaan ganti pola', k: 'track', hub: true },
     { t: 'Ganti Pola Kulit', s: SEC[0], p: 'page-gp-kulit', i: 'ti-scissors', f: '#EA580C', b: '#FFEDE0', d: 'Checklist Sudah Cutting → Sudah Ambil', k: 'track', searchOnly: true },
     { t: 'Tracking Memo Kulit', s: SEC[0], p: 'page-memo-kulit', i: 'ti-route', f: '#9B6DDC', b: '#F1EAFB', d: '3R → PPIC → Gudang Kulit → Terima Material', k: 'track' },
+    { t: 'Project', s: SEC[0], p: 'page-project', i: 'ti-folders', f: '#0D9488', b: '#DDF3F0', d: 'Kumpulan menu project cutting kulit', k: 'track', hub: true },
+    { t: 'Lembar Hasil Cutting', s: SEC[0], p: 'page-lembar-cutting', i: 'ti-camera', f: '#0D9488', b: '#DDF3F0', d: 'Hasil cek lembar per OPCK + foto', k: 'input' },
     { t: 'Data GAP IN/OUT Cutting Kulit', s: SEC[0], p: 'page-gap-cutting', i: 'ti-alert-triangle', f: '#E11D48', b: '#FFE4EA', d: 'Lihat data GAP IN dan GAP OUT', k: 'monitor' },
     { t: 'Data WIP Cutting Kulit', s: SEC[0], p: 'page-wip-cutting', i: 'ti-chart-bar', f: '#0EA5E9', b: '#E0F2FE', d: 'WIP Rak dan WIP Proses', k: 'monitor' },
     // Cutting Synthetic
@@ -18443,7 +19010,7 @@
   // Halaman yang menampilkan navigasi bawah -> tab yang menyala
   var NAV_MAP = {
     'page-home': 'home', 'page-menu': 'menu', 'page-monitoring': 'mon', 'page-akun': 'acc',
-    'page-cutting': 'menu', 'page-cutting-synthetic': 'menu', 'page-accessories': 'menu', 'page-spa-factory': 'menu', 'page-ganti-pola': 'menu'
+    'page-project': 'menu', 'page-cutting': 'menu', 'page-cutting-synthetic': 'menu', 'page-accessories': 'menu', 'page-spa-factory': 'menu', 'page-ganti-pola': 'menu'
   };
   var RECENT_KEY = 'litraRecents';
 
