@@ -13185,7 +13185,7 @@
         if (err || !data || data.status !== 'ok') { setStatus('error'); _showLoadError('lc', err, data); return; }
         lc.rows = data.rows || [];
         lc.multiOk = data.multi === true; // backend versi terbaru (mendukung banyak SF & Lot per OPCK)
-        lc.statusOk = data.statusCol === true; // backend mencetak jawaban FULL / BELUM FULL ke kolom L
+        lc.statusOk = data.statusCol === true; // backend menangani jawaban FULL / BELUM FULL (menandai SUDAH di Form Keluar Kulit Dari Rak)
         setStatus('ok', lc.rows.length);
         revalidate();
       });
@@ -13482,12 +13482,12 @@
       var link = function(u) { return u ? '<a class="lc-link" href="' + esc(u) + '" target="_blank" rel="noopener">Buka</a>' : '-'; };
       var html = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [])
         + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
-        + ['SPO', 'Style', 'Size', 'OPCK', 'Operator', 'Absen', 'SF', 'Lot', 'Foto 1', 'Foto 2', 'Status Cek'].map(function(c) { return '<th>' + c + '</th>'; }).join('')
+        + ['SPO', 'Style', 'Size', 'OPCK', 'Operator', 'Absen', 'SF', 'Lot', 'Foto 1', 'Foto 2'].map(function(c) { return '<th>' + c + '</th>'; }).join('')
         + '</tr></thead><tbody>'
         + rows.map(function(r) {
             return '<tr><td>' + _escToday(r.spo) + '</td><td>' + _escToday(r.style) + '</td><td>' + _escToday(r.size) + '</td><td>' + _escToday(r.opck) + '</td>'
               + '<td>' + _escToday(r.operator) + '</td><td>' + _escToday(r.absen) + '</td><td>' + _escToday(r.sf) + '</td><td>' + _escToday(r.lot) + '</td>'
-              + '<td>' + link(r.foto1) + '</td><td>' + link(r.foto2) + '</td><td>' + _escToday(r.status) + '</td></tr>';
+              + '<td>' + link(r.foto1) + '</td><td>' + link(r.foto2) + '</td></tr>';
           }).join('')
         + '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
       el.innerHTML = html;
