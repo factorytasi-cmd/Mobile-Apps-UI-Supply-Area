@@ -679,6 +679,17 @@
     .lc-block-x { width: 30px; height: 30px; border-radius: 9px; background: rgba(220,53,69,0.08); color: #DC3545; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; }
     .lc-addbtn { width: 100%; padding: 12px; border-radius: 14px; border: 1.5px dashed #86D4CB; background: rgba(13,148,136,0.07); color: #0F5D54; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px; }
     .lc-addbtn:active { background: rgba(13,148,136,0.14); }
+    .lc-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,26,29,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 18px; }
+    .lc-modal-overlay.show { display: flex; }
+    .lc-modal { background: #fff; border-radius: 20px; width: 100%; max-width: 360px; padding: 20px 18px 14px; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+    .lc-modal-q { font-size: 16px; font-weight: 700; color: #111; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .lc-modal-q i { color: #0D9488; font-size: 22px; }
+    .lc-modal-sub { font-size: 11.5px; color: #888; line-height: 1.5; margin-bottom: 16px; }
+    .lc-modal-btn { width: 100%; padding: 15px; border-radius: 14px; border: none; font-size: 15px; font-weight: 700; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; margin-bottom: 10px; color: #fff; }
+    .lc-modal-btn.lc-full { background: linear-gradient(135deg, #16A34A, #22C55E); box-shadow: 0 6px 16px rgba(22,163,74,.3); }
+    .lc-modal-btn.lc-belum { background: linear-gradient(135deg, #D97706, #F59E0B); box-shadow: 0 6px 16px rgba(217,119,6,.3); }
+    .lc-modal-btn:active { opacity: .85; }
+    .lc-modal-cancel { width: 100%; background: none; border: none; color: #888; font-size: 12.5px; font-weight: 600; padding: 8px; cursor: pointer; font-family: inherit; }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -1640,6 +1651,15 @@
 
       <div class="divider"></div>
 
+      <div class="lc-modal-overlay" id="lcFullModal" onclick="if(event.target===this)lcAnswerFull(null)">
+        <div class="lc-modal">
+          <div class="lc-modal-q"><i class="ti ti-help-circle"></i> Apakah OPCK sudah Full Cek?</div>
+          <div class="lc-modal-sub" id="lcFullSub"></div>
+          <button type="button" class="lc-modal-btn lc-full" onclick="lcAnswerFull('FULL')"><i class="ti ti-circle-check"></i> FULL</button>
+          <button type="button" class="lc-modal-btn lc-belum" onclick="lcAnswerFull('BELUM FULL')"><i class="ti ti-progress"></i> BELUM FULL</button>
+          <button type="button" class="lc-modal-cancel" onclick="lcAnswerFull(null)">Batal</button>
+        </div>
+      </div>
       <button class="btn-submit" id="lcBtn" onclick="submitLc()">
         <i class="ti ti-send" style="font-size:18px"></i> Kirim
       </button>
@@ -13117,7 +13137,7 @@
   // (text/plain, tanpa preflight CORS). Dibungkus IIFE; hanya fungsi yang dipanggil dari HTML yang dibuka ke window.
   (function() {
     var LC_MAX_SIDE = 1280, LC_QUALITY = 0.72, LC_POST_TIMEOUT_MS = 150000, LC_MAX_BLOCKS = 10;
-    var lc = { rows: [], sel: { spo: '', style: '', size: '', opck: '', operator: '', absen: '' }, blocks: [], seq: 0, multiOk: false, submitId: '', busy: false };
+    var lc = { rows: [], sel: { spo: '', style: '', size: '', opck: '', operator: '', absen: '' }, blocks: [], seq: 0, multiOk: false, statusOk: false, pending: null, submitId: '', busy: false };
 
     function esc(v) {
       return String(v == null ? '' : v).replace(/[&<>"']/g, function(c) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; });
@@ -13165,6 +13185,7 @@
         if (err || !data || data.status !== 'ok') { setStatus('error'); _showLoadError('lc', err, data); return; }
         lc.rows = data.rows || [];
         lc.multiOk = data.multi === true; // backend versi terbaru (mendukung banyak SF & Lot per OPCK)
+        lc.statusOk = data.statusCol === true; // backend mencetak jawaban FULL / BELUM FULL ke kolom L
         setStatus('ok', lc.rows.length);
         revalidate();
       });
@@ -13378,8 +13399,19 @@
       return data;
     }
 
-    function finishOk(count) {
-      showToast('✓ Data berhasil disimpan' + (count > 1 ? ' (' + count + ' baris)' : '!'), 'success');
+    // rak = hasil penandaan kolom N 'Form Keluar Kulit Dari Rak' dari server (hanya ada kalau jawabannya FULL)
+    function finishOk(count, rak, status) {
+      var base = 'Data berhasil disimpan' + (count > 1 ? ' (' + count + ' baris)' : '');
+      if (status === 'FULL' && rak) {
+        if (!rak.ok) showToast('⚠️ ' + base + ', TAPI gagal menandai SUDAH di Form Keluar Kulit Dari Rak: ' + (rak.error || 'cek hak akses'), 'error');
+        else if (rak.found === 0) showToast('⚠️ ' + base + ', tapi OPCK tidak ditemukan di Form Keluar Kulit Dari Rak (kolom N tidak diubah)', 'error');
+        else if (rak.formulaSkipped) showToast('⚠️ ' + base + ', tapi kolom N berisi rumus sehingga tidak diubah', 'error');
+        else showToast('✓ ' + base + ' · OPCK ditandai SUDAH', 'success');
+      } else if (status === 'BELUM FULL') {
+        showToast('✓ ' + base + ' · OPCK belum full (kolom N tetap kosong)', 'success');
+      } else {
+        showToast('✓ ' + base + '!', 'success');
+      }
       resetLcForm();
       loadLcMaster();
       loadTodayLc();
@@ -13394,6 +13426,28 @@
         showToast('Backend belum mendukung banyak SF & Lot — deploy Apps Script versi terbaru dulu (Versi baru) [backend …' + tag() + ']', 'error');
         return;
       }
+      if (!lc.statusOk) {
+        showToast('Backend belum mendukung status FULL / BELUM FULL — deploy Apps Script versi terbaru dulu (Versi baru) [backend …' + tag() + ']', 'error');
+        return;
+      }
+      // Pertanyaan validasi sebelum mengirim: Apakah OPCK sudah Full Cek? -> FULL / BELUM FULL
+      lc.pending = data;
+      $('lcFullSub').textContent = 'SPO ' + data.spo + ' · Size ' + data.size + ' · OPCK ' + data.opck + ' · ' + count + ' baris SF & Lot';
+      $('lcFullModal').classList.add('show');
+    }
+
+    function lcAnswerFull(status) {
+      $('lcFullModal').classList.remove('show');
+      var data = lc.pending;
+      lc.pending = null;
+      if (!status || !data) return; // Batal: kembali ke form
+      data.statusCek = status;
+      sendLc(data);
+    }
+
+    function sendLc(data) {
+      var count = data.entries ? data.entries.length : 1;
+      if (lc.busy) return;
       lc.busy = true;
       $('lcBtn').disabled = true;
       showLoading(true);
@@ -13405,7 +13459,7 @@
         .then(function(r) { return r.json(); })
         .then(function(res) {
           clearTimeout(timer); done();
-          if (res && res.status === 'ok') finishOk(count);
+          if (res && res.status === 'ok') finishOk(count, res.rak, data.statusCek);
           else showToast('Gagal: ' + (res && res.message ? res.message : 'Coba lagi') + ' [backend …' + tag() + ']', 'error');
         })
         .catch(function() {
@@ -13413,7 +13467,7 @@
           clearTimeout(timer);
           jsonp(GAS_LEMBAR_URL + '?type=lembar_status&id=' + encodeURIComponent(sentId), function(err, st) {
             done();
-            if (!err && st && st.status === 'ok' && st.found) finishOk(count);
+            if (!err && st && st.status === 'ok' && st.found) finishOk(count, st.result && st.result.rak, data.statusCek);
             else showToast('Gagal terima konfirmasi server. Cek "Cek Data Terkirim" dulu sebelum kirim ulang!', 'error');
           });
         });
@@ -13428,12 +13482,12 @@
       var link = function(u) { return u ? '<a class="lc-link" href="' + esc(u) + '" target="_blank" rel="noopener">Buka</a>' : '-'; };
       var html = _renderTodayStatsBar(rows, 'opck', 'Jumlah OPCK', [])
         + '<div class="today-tablewrap"><table class="today-table"><thead><tr>'
-        + ['SPO', 'Style', 'Size', 'OPCK', 'Operator', 'Absen', 'SF', 'Lot', 'Foto 1', 'Foto 2'].map(function(c) { return '<th>' + c + '</th>'; }).join('')
+        + ['SPO', 'Style', 'Size', 'OPCK', 'Operator', 'Absen', 'SF', 'Lot', 'Foto 1', 'Foto 2', 'Status Cek'].map(function(c) { return '<th>' + c + '</th>'; }).join('')
         + '</tr></thead><tbody>'
         + rows.map(function(r) {
             return '<tr><td>' + _escToday(r.spo) + '</td><td>' + _escToday(r.style) + '</td><td>' + _escToday(r.size) + '</td><td>' + _escToday(r.opck) + '</td>'
               + '<td>' + _escToday(r.operator) + '</td><td>' + _escToday(r.absen) + '</td><td>' + _escToday(r.sf) + '</td><td>' + _escToday(r.lot) + '</td>'
-              + '<td>' + link(r.foto1) + '</td><td>' + link(r.foto2) + '</td></tr>';
+              + '<td>' + link(r.foto1) + '</td><td>' + link(r.foto2) + '</td><td>' + _escToday(r.status) + '</td></tr>';
           }).join('')
         + '</tbody></table></div><div class="today-scroll-hint">← geser tabel untuk lihat kolom lainnya →</div>';
       el.innerHTML = html;
@@ -13463,6 +13517,7 @@
     window.lcFileChosen = lcFileChosen;
     window.lcRemovePhoto = lcRemovePhoto;
     window.submitLc = submitLc;
+    window.lcAnswerFull = lcAnswerFull;
     window.loadTodayLc = loadTodayLc;
   })();
 
