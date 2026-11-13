@@ -673,6 +673,12 @@
     .lc-photo-area .lc-photo-kb { position: absolute; left: 6px; bottom: 6px; background: rgba(0,0,0,.6); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 99px; }
     .lc-hint { font-size: 10.5px; color: #999; margin-top: 6px; }
     .lc-link { color: #0D9488; font-weight: 700; text-decoration: none; }
+    .lc-block { background: #fff; border: 1px solid #E4E6E4; border-left: 4px solid #0D9488; border-radius: 14px; padding: 12px 12px 6px; margin-bottom: 12px; }
+    .lc-block-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .lc-block-t { font-size: 12.5px; font-weight: 700; color: #0F5D54; letter-spacing: .2px; }
+    .lc-block-x { width: 30px; height: 30px; border-radius: 9px; background: rgba(220,53,69,0.08); color: #DC3545; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; }
+    .lc-addbtn { width: 100%; padding: 12px; border-radius: 14px; border: 1.5px dashed #86D4CB; background: rgba(13,148,136,0.07); color: #0F5D54; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px; }
+    .lc-addbtn:active { background: rgba(13,148,136,0.14); }
 
     /* Halaman Data GAP pakai warna rose, bukan biru, untuk toggle & filter aktif */
     #page-gap-cutting .wip-toggle-btn.active { background: linear-gradient(135deg, #E11D48, #FB7185); }
@@ -1628,33 +1634,8 @@
         </div>
       </div>
 
-      <div class="row-grid">
-        <div class="field-group">
-          <label class="field-label">SF</label>
-          <input type="text" inputmode="decimal" class="field-input" id="lcSf" placeholder="0">
-        </div>
-        <div class="field-group">
-          <label class="field-label">Lot</label>
-          <input type="text" class="field-input" id="lcLot" placeholder="No. Lot" autocomplete="off">
-        </div>
-      </div>
-
-      <div class="lc-photos">
-        <div class="lc-photo" id="lcPhotoBox1">
-          <label class="field-label">Foto 1 <span class="so-auto">(opsional)</span></label>
-          <div class="lc-photo-area" id="lcPhotoArea1" onclick="lcPickPhoto(1)">
-            <i class="ti ti-camera-plus"></i><span>Ambil / pilih foto</span>
-          </div>
-          <input type="file" accept="image/*" capture="environment" id="lcFile1" style="display:none" onchange="lcFileChosen(1, this)">
-        </div>
-        <div class="lc-photo" id="lcPhotoBox2">
-          <label class="field-label">Foto 2 <span class="so-auto">(opsional)</span></label>
-          <div class="lc-photo-area" id="lcPhotoArea2" onclick="lcPickPhoto(2)">
-            <i class="ti ti-camera-plus"></i><span>Ambil / pilih foto</span>
-          </div>
-          <input type="file" accept="image/*" capture="environment" id="lcFile2" style="display:none" onchange="lcFileChosen(2, this)">
-        </div>
-      </div>
+      <div id="lcBlocks"></div>
+      <button type="button" class="lc-addbtn" onclick="addLcBlock()"><i class="ti ti-plus" style="font-size:16px"></i> Tambah SF &amp; Lot</button>
       <div class="lc-hint">Foto otomatis dikecilkan sebelum dikirim, jadi hemat kuota dan cepat terkirim.</div>
 
       <div class="divider"></div>
@@ -13128,19 +13109,21 @@
 
   // ===== PROJECT > LEMBAR HASIL CUTTING (CUTTING KULIT SECTION) =====
   // Form: Tanggal, SPO (suggest), Style (otomatis), Size (suggest), OPCK (suggest, difilter SPO+Size),
-  // Nama Operator & Absen (otomatis dari OPCK), SF, Lot, Foto 1, Foto 2 (opsional). Sumber suggest: sheet
-  // "Master_List_Cek Lembar Kulit". Backend TERPISAH (GAS_LEMBAR_URL = CodeLembarCutting.gs, akun
-  // cuttingkulitfoto1): foto disimpan ke Google Drive, link foto dicetak di "Report_Lembar Hasil Cutting".
-  // Foto dikecilkan di HP dulu (maks 1280 px, JPEG) lalu dikirim lewat POST (text/plain, tanpa preflight CORS).
-  // Dibungkus IIFE; hanya fungsi yang dipanggil dari HTML yang dibuka ke window.
+  // Nama Operator & Absen (otomatis dari OPCK), lalu satu atau BANYAK blok "SF & Lot" (tiap blok: SF, Lot,
+  // Foto 1, Foto 2 opsional) untuk OPCK yang sama — tiap blok tercetak sebagai 1 baris di sheet Report.
+  // Sumber suggest: sheet "Master_List_Cek Lembar Kulit". Backend TERPISAH (GAS_LEMBAR_URL =
+  // CodeLembarCutting.gs, akun cuttingkulitfoto1): foto disimpan ke Google Drive, link foto dicetak di
+  // "Report_Lembar Hasil Cutting". Foto dikecilkan di HP dulu (maks 1280 px, JPEG) lalu dikirim lewat POST
+  // (text/plain, tanpa preflight CORS). Dibungkus IIFE; hanya fungsi yang dipanggil dari HTML yang dibuka ke window.
   (function() {
-    var LC_MAX_SIDE = 1280, LC_QUALITY = 0.72, LC_POST_TIMEOUT_MS = 90000;
-    var lc = { rows: [], sel: { spo: '', style: '', size: '', opck: '', operator: '', absen: '' }, photos: { 1: null, 2: null }, submitId: '', busy: false };
+    var LC_MAX_SIDE = 1280, LC_QUALITY = 0.72, LC_POST_TIMEOUT_MS = 150000, LC_MAX_BLOCKS = 10;
+    var lc = { rows: [], sel: { spo: '', style: '', size: '', opck: '', operator: '', absen: '' }, blocks: [], seq: 0, multiOk: false, submitId: '', busy: false };
 
     function esc(v) {
       return String(v == null ? '' : v).replace(/[&<>"']/g, function(c) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; });
     }
     function $(id) { return document.getElementById(id); }
+    function tag() { return String(GAS_LEMBAR_URL || '').replace(/\/exec.*$/, '').slice(-6); }
     function newId() { return 'lc_' + Date.now() + '_' + Math.floor(Math.random() * 1e9).toString(36); }
     function lcReady() {
       if (GAS_LEMBAR_URL) return true;
@@ -13163,9 +13146,11 @@
     function resetLcForm() {
       lc.sel = { spo: '', style: '', size: '', opck: '', operator: '', absen: '' };
       lc.submitId = newId();
-      ['lcSpo', 'lcSize', 'lcOpck', 'lcSf', 'lcLot'].forEach(function(id) { $(id).value = ''; });
+      ['lcSpo', 'lcSize', 'lcOpck'].forEach(function(id) { $(id).value = ''; });
       syncAuto();
-      clearPhoto(1); clearPhoto(2);
+      $('lcBlocks').innerHTML = '';
+      lc.blocks = [];
+      addLcBlock();
     }
 
     function loadLcMaster() {
@@ -13176,8 +13161,10 @@
       var t0 = Date.now();
       jsonp(GAS_LEMBAR_URL + '?type=lembar_master', function(err, data) {
         _showLoadTime('lcLoadTime', Date.now() - t0);
+        $('lcLoadTime').textContent += ' · backend …' + tag();
         if (err || !data || data.status !== 'ok') { setStatus('error'); _showLoadError('lc', err, data); return; }
         lc.rows = data.rows || [];
+        lc.multiOk = data.multi === true; // backend versi terbaru (mendukung banyak SF & Lot per OPCK)
         setStatus('ok', lc.rows.length);
         revalidate();
       });
@@ -13271,8 +13258,50 @@
       $('lcAbsen').className = absen ? 'style-display filled' : 'style-display';
     }
 
+    // ---- Blok "SF & Lot" (banyak per OPCK) ----
+    function photoBox(bid, n) {
+      return '<div class="lc-photo"><label class="field-label">Foto ' + n + ' <span class="so-auto">(opsional)</span></label>'
+        + '<div class="lc-photo-area" id="lcPhotoArea-' + bid + '-' + n + '" onclick="lcPickPhoto(' + bid + ',' + n + ')"><i class="ti ti-camera-plus"></i><span>Ambil / pilih foto</span></div>'
+        + '<input type="file" accept="image/*" capture="environment" id="lcFile-' + bid + '-' + n + '" style="display:none" onchange="lcFileChosen(' + bid + ',' + n + ',this)"></div>';
+    }
+
+    function addLcBlock() {
+      if (lc.blocks.length >= LC_MAX_BLOCKS) { showToast('Maksimal ' + LC_MAX_BLOCKS + ' SF & Lot per OPCK', 'error'); return; }
+      var b = { id: ++lc.seq, photos: { 1: null, 2: null } };
+      lc.blocks.push(b);
+      var div = document.createElement('div');
+      div.className = 'lc-block';
+      div.id = 'lcBlock-' + b.id;
+      div.innerHTML = '<div class="lc-block-h"><span class="lc-block-t" id="lcBlockT-' + b.id + '"></span>'
+        + '<span class="lc-block-x" id="lcBlockX-' + b.id + '" onclick="lcRemoveBlock(' + b.id + ')"><i class="ti ti-trash"></i></span></div>'
+        + '<div class="row-grid">'
+        + '<div class="field-group"><label class="field-label">SF</label><input type="text" inputmode="decimal" class="field-input" id="lcSf-' + b.id + '" placeholder="0"></div>'
+        + '<div class="field-group"><label class="field-label">Lot</label><input type="text" class="field-input" id="lcLot-' + b.id + '" placeholder="No. Lot" autocomplete="off"></div>'
+        + '</div>'
+        + '<div class="lc-photos">' + photoBox(b.id, 1) + photoBox(b.id, 2) + '</div>';
+      $('lcBlocks').appendChild(div);
+      renumberBlocks();
+    }
+
+    function lcRemoveBlock(id) {
+      if (lc.blocks.length <= 1) { showToast('Minimal 1 SF & Lot', 'error'); return; }
+      lc.blocks = lc.blocks.filter(function(b) { return b.id !== id; });
+      var el = $('lcBlock-' + id);
+      if (el) el.parentNode.removeChild(el);
+      renumberBlocks();
+    }
+
+    function renumberBlocks() {
+      lc.blocks.forEach(function(b, i) {
+        $('lcBlockT-' + b.id).textContent = 'SF & Lot #' + (i + 1);
+        $('lcBlockX-' + b.id).style.display = lc.blocks.length > 1 ? 'flex' : 'none';
+      });
+    }
+
+    function getBlock(id) { for (var i = 0; i < lc.blocks.length; i++) if (lc.blocks[i].id === id) return lc.blocks[i]; return null; }
+
     // ---- Foto: ambil dari kamera / galeri, kecilkan, pratinjau ----
-    function lcPickPhoto(n) { if (!lc.photos[n]) $('lcFile' + n).click(); }
+    function lcPickPhoto(bid, n) { var b = getBlock(bid); if (b && !b.photos[n]) $('lcFile-' + bid + '-' + n).click(); }
 
     function compress(file) {
       return new Promise(function(resolve, reject) {
@@ -13298,45 +13327,59 @@
       });
     }
 
-    function lcFileChosen(n, input) {
+    function lcFileChosen(bid, n, input) {
       var file = input.files && input.files[0];
       input.value = '';
-      if (!file) return;
+      var b = getBlock(bid);
+      if (!file || !b) return;
       compress(file).then(function(dataUrl) {
-        lc.photos[n] = { dataUrl: dataUrl, kb: Math.round(dataUrl.length * 0.75 / 1024) };
-        renderPhoto(n);
+        if (!getBlock(bid)) return; // blok sudah dihapus selagi foto diproses
+        b.photos[n] = { dataUrl: dataUrl, kb: Math.round(dataUrl.length * 0.75 / 1024) };
+        renderPhoto(bid, n);
       }, function() { showToast('Foto tidak bisa dibaca — coba ambil ulang', 'error'); });
     }
 
-    function renderPhoto(n) {
-      var area = $('lcPhotoArea' + n), p = lc.photos[n];
+    function renderPhoto(bid, n) {
+      var b = getBlock(bid), area = $('lcPhotoArea-' + bid + '-' + n);
+      if (!b || !area) return;
+      var p = b.photos[n];
       if (!p) { area.innerHTML = '<i class="ti ti-camera-plus"></i><span>Ambil / pilih foto</span>'; return; }
-      area.innerHTML = '<img src="' + p.dataUrl + '" alt="Foto ' + n + '"><div class="lc-photo-x" onclick="event.stopPropagation();lcRemovePhoto(' + n + ')"><i class="ti ti-x"></i></div><div class="lc-photo-kb">' + p.kb + ' KB</div>';
+      area.innerHTML = '<img src="' + p.dataUrl + '" alt="Foto ' + n + '"><div class="lc-photo-x" onclick="event.stopPropagation();lcRemovePhoto(' + bid + ',' + n + ')"><i class="ti ti-x"></i></div><div class="lc-photo-kb">' + p.kb + ' KB</div>';
     }
-    function clearPhoto(n) { lc.photos[n] = null; renderPhoto(n); }
-    function lcRemovePhoto(n) { clearPhoto(n); }
+    function lcRemovePhoto(bid, n) { var b = getBlock(bid); if (!b) return; b.photos[n] = null; renderPhoto(bid, n); }
 
     // ---- Kirim ----
     function collect() {
       var s = lc.sel, tanggal = $('lcTanggal').value;
-      var sf = $('lcSf').value.trim(), lot = $('lcLot').value.trim();
       if (!tanggal) return { error: 'Tanggal harus diisi' };
       if (!s.spo) return { error: 'SPO wajib dipilih dari daftar' };
       if (!s.size) return { error: 'Size wajib dipilih dari daftar' };
       if (!s.opck) return { error: 'OPCK wajib dipilih dari daftar agar Operator & Absen terisi' };
       if (!s.operator) return { error: 'Operator belum terisi — pilih OPCK dari daftar saran' };
-      if (!sf) return { error: 'SF wajib diisi' };
-      if (!lot) return { error: 'Lot wajib diisi' };
-      return {
-        submitId: lc.submitId, tanggal: tanggal, spo: s.spo, style: s.style, size: s.size, opck: s.opck,
-        operator: s.operator, absen: s.absen, sf: sf, lot: lot,
-        foto1: lc.photos[1] ? lc.photos[1].dataUrl.split(',')[1] : '',
-        foto2: lc.photos[2] ? lc.photos[2].dataUrl.split(',')[1] : ''
-      };
+      var entries = [], err = null;
+      lc.blocks.forEach(function(b, i) {
+        if (err) return;
+        var sf = $('lcSf-' + b.id).value.trim(), lot = $('lcLot-' + b.id).value.trim();
+        if (!sf) { err = 'SF wajib diisi (SF & Lot #' + (i + 1) + ')'; return; }
+        if (!lot) { err = 'Lot wajib diisi (SF & Lot #' + (i + 1) + ')'; return; }
+        entries.push({
+          sf: sf, lot: lot,
+          foto1: b.photos[1] ? b.photos[1].dataUrl.split(',')[1] : '',
+          foto2: b.photos[2] ? b.photos[2].dataUrl.split(',')[1] : ''
+        });
+      });
+      if (err) return { error: err };
+      var data = { submitId: lc.submitId, tanggal: tanggal, spo: s.spo, style: s.style, size: s.size, opck: s.opck, operator: s.operator, absen: s.absen };
+      if (entries.length === 1) { // satu blok: format lama (cocok dengan backend versi lama maupun baru)
+        data.sf = entries[0].sf; data.lot = entries[0].lot; data.foto1 = entries[0].foto1; data.foto2 = entries[0].foto2;
+      } else {
+        data.entries = entries;
+      }
+      return data;
     }
 
-    function finishOk(data) {
-      showToast('✓ Data berhasil disimpan!', 'success');
+    function finishOk(count) {
+      showToast('✓ Data berhasil disimpan' + (count > 1 ? ' (' + count + ' baris)' : '!'), 'success');
       resetLcForm();
       loadLcMaster();
       loadTodayLc();
@@ -13346,6 +13389,11 @@
       if (lc.busy || !lcReady()) return;
       var data = collect();
       if (data.error) { showToast('⚠️ ' + data.error, 'error'); return; }
+      var count = data.entries ? data.entries.length : 1;
+      if (count > 1 && !lc.multiOk) {
+        showToast('Backend belum mendukung banyak SF & Lot — deploy Apps Script versi terbaru dulu (Versi baru) [backend …' + tag() + ']', 'error');
+        return;
+      }
       lc.busy = true;
       $('lcBtn').disabled = true;
       showLoading(true);
@@ -13357,15 +13405,15 @@
         .then(function(r) { return r.json(); })
         .then(function(res) {
           clearTimeout(timer); done();
-          if (res && res.status === 'ok') finishOk(res);
-          else showToast('Gagal: ' + (res && res.message ? res.message : 'Coba lagi'), 'error');
+          if (res && res.status === 'ok') finishOk(count);
+          else showToast('Gagal: ' + (res && res.message ? res.message : 'Coba lagi') + ' [backend …' + tag() + ']', 'error');
         })
         .catch(function() {
           // Balasan tidak sampai: cek apakah pengiriman ini sebenarnya sudah tersimpan
           clearTimeout(timer);
           jsonp(GAS_LEMBAR_URL + '?type=lembar_status&id=' + encodeURIComponent(sentId), function(err, st) {
             done();
-            if (!err && st && st.status === 'ok' && st.found) finishOk(st.result);
+            if (!err && st && st.status === 'ok' && st.found) finishOk(count);
             else showToast('Gagal terima konfirmasi server. Cek "Cek Data Terkirim" dulu sebelum kirim ulang!', 'error');
           });
         });
@@ -13409,6 +13457,8 @@
 
     window.initLc = initLc;
     window.loadLcMaster = loadLcMaster;
+    window.addLcBlock = addLcBlock;
+    window.lcRemoveBlock = lcRemoveBlock;
     window.lcPickPhoto = lcPickPhoto;
     window.lcFileChosen = lcFileChosen;
     window.lcRemovePhoto = lcRemovePhoto;
